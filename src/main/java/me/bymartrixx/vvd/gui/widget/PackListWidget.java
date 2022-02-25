@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import me.bymartrixx.vvd.vvdMod;
+import me.bymartrixx.vvd.VVDMod;
 import me.bymartrixx.vvd.gui.VVDScreen;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
@@ -32,7 +32,8 @@ public class PackListWidget extends EntryListWidget<PackListWidget.PackEntry> {
     private final boolean displayEntries;
 
     public PackListWidget(JsonArray packs, String categoryName) {
-        super(VVDScreen.getInstance().getClient(), VVDScreen.getInstance().width - 180, VVDScreen.getInstance().height, 60, VVDScreen.getInstance().height - 40, 32);
+        super(VVDScreen.getInstance().getClient(), VVDScreen.getInstance().width - 180, VVDScreen.getInstance().height,
+                60, VVDScreen.getInstance().height - 40, 32);
         this.displayEntries = true;
 
         this.setRenderHeader(true, 16);
@@ -48,7 +49,8 @@ public class PackListWidget extends EntryListWidget<PackListWidget.PackEntry> {
     }
 
     public PackListWidget() {
-        super(VVDScreen.getInstance().getClient(), VVDScreen.getInstance().width - 180, VVDScreen.getInstance().height, 60, VVDScreen.getInstance().height - 40, 32);
+        super(VVDScreen.getInstance().getClient(), VVDScreen.getInstance().width - 180, VVDScreen.getInstance().height,
+                60, VVDScreen.getInstance().height - 40, 32);
         this.displayEntries = false;
         this.categoryName = "Error!";
         this.oneEntry = false;
@@ -69,7 +71,8 @@ public class PackListWidget extends EntryListWidget<PackListWidget.PackEntry> {
     }
 
     public void setSelected(@Nullable PackListWidget.PackEntry entry, boolean child) {
-        if (entry == null) return;
+        if (entry == null)
+            return;
 
         if (this.children().contains(entry) || !child) {
             String packName = entry.name;
@@ -82,7 +85,8 @@ public class PackListWidget extends EntryListWidget<PackListWidget.PackEntry> {
     }
 
     public boolean isSelected(PackListWidget.PackEntry entry) {
-        if (!this.children().contains(entry)) return false;
+        if (!this.children().contains(entry))
+            return false;
 
         return VVDScreen.getInstance().isPackSelected(this.categoryName, entry.name);
     }
@@ -93,12 +97,14 @@ public class PackListWidget extends EntryListWidget<PackListWidget.PackEntry> {
 
     protected void renderHeader(MatrixStack matrices, int x, int y, Tessellator tessellator) {
         Text text = new LiteralText(this.categoryName).formatted(Formatting.BOLD, Formatting.UNDERLINE);
-        VVDScreen.getInstance().getTextRenderer().draw(matrices, text, ((float) (this.width / 2 - VVDScreen.getInstance().getTextRenderer().getWidth(text) / 2)), Math.min(this.top + 3, y), 16777215);
+        VVDScreen.getInstance().getTextRenderer().draw(matrices, text,
+                ((float) (this.width / 2 - VVDScreen.getInstance().getTextRenderer().getWidth(text) / 2)),
+                Math.min(this.top + 3, y), 16777215);
     }
 
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         if (this.displayEntries) {
-//            super.render(matrices, mouseX, mouseY, delta);
+            // super.render(matrices, mouseX, mouseY, delta);
 
             // Cursed fix for #2, copied from EntryListWidget#render, TODO: Remove
             this.renderBackground(matrices);
@@ -107,27 +113,36 @@ public class PackListWidget extends EntryListWidget<PackListWidget.PackEntry> {
             Tessellator tessellator = Tessellator.getInstance();
             BufferBuilder bufferBuilder = tessellator.getBuffer();
             RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
-            //this.hoveredEntry = (E)(this.isMouseOver(mouseX, mouseY) ? this.getEntryAtPosition(mouseX, mouseY) : null);
-            //if (this.renderBackground) { // Private field, true
+            // this.hoveredEntry = (E)(this.isMouseOver(mouseX, mouseY) ?
+            // this.getEntryAtPosition(mouseX, mouseY) : null);
+            // if (this.renderBackground) { // Private field, true
             RenderSystem.setShaderTexture(0, DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             float f = 32.0F;
             bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
-            bufferBuilder.vertex(this.left, this.bottom, 0.0).texture((float) this.left / 32.0F, (float) (this.bottom + (int) this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255).next();
-            bufferBuilder.vertex(this.right, this.bottom, 0.0).texture((float) this.right / 32.0F, (float) (this.bottom + (int) this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255).next();
-            bufferBuilder.vertex(this.right, this.top, 0.0).texture((float) this.right / 32.0F, (float) (this.top + (int) this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255).next();
-            bufferBuilder.vertex(this.left, this.top, 0.0).texture((float) this.left / 32.0F, (float) (this.top + (int) this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255).next();
+            bufferBuilder.vertex(this.left, this.bottom, 0.0)
+                    .texture((float) this.left / 32.0F, (float) (this.bottom + (int) this.getScrollAmount()) / 32.0F)
+                    .color(32, 32, 32, 255).next();
+            bufferBuilder.vertex(this.right, this.bottom, 0.0)
+                    .texture((float) this.right / 32.0F, (float) (this.bottom + (int) this.getScrollAmount()) / 32.0F)
+                    .color(32, 32, 32, 255).next();
+            bufferBuilder.vertex(this.right, this.top, 0.0)
+                    .texture((float) this.right / 32.0F, (float) (this.top + (int) this.getScrollAmount()) / 32.0F)
+                    .color(32, 32, 32, 255).next();
+            bufferBuilder.vertex(this.left, this.top, 0.0)
+                    .texture((float) this.left / 32.0F, (float) (this.top + (int) this.getScrollAmount()) / 32.0F)
+                    .color(32, 32, 32, 255).next();
             tessellator.draw();
-            //}
+            // }
 
             int k = this.getRowLeft();
-            int l = this.top + 4 - (int)this.getScrollAmount();
-            //if (this.renderHeader) { // Private field, true
+            int l = this.top + 4 - (int) this.getScrollAmount();
+            // if (this.renderHeader) { // Private field, true
             this.renderHeader(matrices, k, l, tessellator);
-            //}
+            // }
 
             this.renderList(matrices, k, l, mouseX, mouseY, delta);
-            //if (this.renderHorizontalShadows) { // Private field, true
+            // if (this.renderHorizontalShadows) { // Private field, true
             RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
             RenderSystem.setShaderTexture(0, DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
             RenderSystem.enableDepthTest();
@@ -135,19 +150,28 @@ public class PackListWidget extends EntryListWidget<PackListWidget.PackEntry> {
             float g = 32.0F;
             int m = -100;
             bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
-            bufferBuilder.vertex(this.left, this.top, -100.0).texture(0.0F, (float) this.top / 32.0F).color(64, 64, 64, 255).next();
-            bufferBuilder.vertex(this.left + this.width, this.top, -100.0).texture((float) this.width / 32.0F, (float) this.top / 32.0F).color(64, 64, 64, 255).next();
-            bufferBuilder.vertex(this.left + this.width, 0.0, -100.0).texture((float) this.width / 32.0F, 0.0F).color(64, 64, 64, 255).next();
+            bufferBuilder.vertex(this.left, this.top, -100.0).texture(0.0F, (float) this.top / 32.0F)
+                    .color(64, 64, 64, 255).next();
+            bufferBuilder.vertex(this.left + this.width, this.top, -100.0)
+                    .texture((float) this.width / 32.0F, (float) this.top / 32.0F).color(64, 64, 64, 255).next();
+            bufferBuilder.vertex(this.left + this.width, 0.0, -100.0).texture((float) this.width / 32.0F, 0.0F)
+                    .color(64, 64, 64, 255).next();
             bufferBuilder.vertex(this.left, 0.0, -100.0).texture(0.0F, 0.0F).color(64, 64, 64, 255).next();
-            bufferBuilder.vertex(this.left, this.height, -100.0).texture(0.0F, (float) this.height / 32.0F).color(64, 64, 64, 255).next();
-            bufferBuilder.vertex(this.left + this.width, this.height, -100.0).texture((float) this.width / 32.0F, (float) this.height / 32.0F).color(64, 64, 64, 255).next();
-            bufferBuilder.vertex(this.left + this.width, this.bottom, -100.0).texture((float) this.width / 32.0F, (float) this.bottom / 32.0F).color(64, 64, 64, 255).next();
-            bufferBuilder.vertex(this.left, this.bottom, -100.0).texture(0.0F, (float) this.bottom / 32.0F).color(64, 64, 64, 255).next();
+            bufferBuilder.vertex(this.left, this.height, -100.0).texture(0.0F, (float) this.height / 32.0F)
+                    .color(64, 64, 64, 255).next();
+            bufferBuilder.vertex(this.left + this.width, this.height, -100.0)
+                    .texture((float) this.width / 32.0F, (float) this.height / 32.0F).color(64, 64, 64, 255).next();
+            bufferBuilder.vertex(this.left + this.width, this.bottom, -100.0)
+                    .texture((float) this.width / 32.0F, (float) this.bottom / 32.0F).color(64, 64, 64, 255).next();
+            bufferBuilder.vertex(this.left, this.bottom, -100.0).texture(0.0F, (float) this.bottom / 32.0F)
+                    .color(64, 64, 64, 255).next();
             tessellator.draw();
             RenderSystem.depthFunc(515);
             RenderSystem.disableDepthTest();
             RenderSystem.enableBlend();
-            RenderSystem.blendFuncSeparate(GlStateManager.class_4535.SRC_ALPHA, GlStateManager.class_4534.ONE_MINUS_SRC_ALPHA, GlStateManager.class_4535.ZERO, GlStateManager.class_4534.ONE);
+            RenderSystem.blendFuncSeparate(GlStateManager.class_4535.SRC_ALPHA,
+                    GlStateManager.class_4534.ONE_MINUS_SRC_ALPHA, GlStateManager.class_4535.ZERO,
+                    GlStateManager.class_4534.ONE);
             RenderSystem.disableTexture();
             RenderSystem.setShader(GameRenderer::getPositionColorShader);
             int n = 4;
@@ -161,15 +185,16 @@ public class PackListWidget extends EntryListWidget<PackListWidget.PackEntry> {
             bufferBuilder.vertex(this.right, this.bottom - 4, 0.0).color(0, 0, 0, 0).next();
             bufferBuilder.vertex(this.left, this.bottom - 4, 0.0).color(0, 0, 0, 0).next();
             tessellator.draw();
-            //}
+            // }
 
             int o = this.getMaxScroll();
             if (o > 0) {
                 RenderSystem.disableTexture();
                 RenderSystem.setShader(GameRenderer::getPositionColorShader);
-                int p = (int)((float)((this.bottom - this.top) * (this.bottom - this.top)) / (float)this.getMaxPosition());
+                int p = (int) ((float) ((this.bottom - this.top) * (this.bottom - this.top))
+                        / (float) this.getMaxPosition());
                 p = MathHelper.clamp(p, 32, this.bottom - this.top - 8);
-                int q = (int)this.getScrollAmount() * (this.bottom - this.top - p) / o + this.top;
+                int q = (int) this.getScrollAmount() * (this.bottom - this.top - p) / o + this.top;
                 if (q < this.top) {
                     q = this.top;
                 }
@@ -195,17 +220,29 @@ public class PackListWidget extends EntryListWidget<PackListWidget.PackEntry> {
             RenderSystem.disableBlend();
             // End of cursed fix for #2
         } else {
-            Text msgHeader = new TranslatableText("vvd.packError.title.1").formatted(Formatting.BOLD, Formatting.ITALIC);
-            Text msgHeader2 = new TranslatableText("vvd.packError.title.2").formatted(Formatting.BOLD, Formatting.ITALIC);
+            Text msgHeader = new TranslatableText("vvd.packError.title.1").formatted(Formatting.BOLD,
+                    Formatting.ITALIC);
+            Text msgHeader2 = new TranslatableText("vvd.packError.title.2").formatted(Formatting.BOLD,
+                    Formatting.ITALIC);
             Text msgBody = new TranslatableText("vvd.packError.body.1");
             Text msgBody2 = new TranslatableText("vvd.packError.body.2");
-            Text msgBody3 = new TranslatableText("vvd.packError.body.3", vvdMod.BASE_URL);
+            Text msgBody3 = new TranslatableText("vvd.packError.body.3", VVDMod.BASE_URL);
 
-            VVDScreen.getInstance().getTextRenderer().draw(matrices, msgHeader, ((float) (this.width / 2 - VVDScreen.getInstance().getTextRenderer().getWidth(msgHeader) / 2)), ((float) (this.height / 2) - 32), 16777215);
-            VVDScreen.getInstance().getTextRenderer().draw(matrices, msgHeader2, ((float) (this.width / 2 - VVDScreen.getInstance().getTextRenderer().getWidth(msgHeader2) / 2)), ((float) (this.height / 2) - 16), 16777215);
-            VVDScreen.getInstance().getTextRenderer().draw(matrices, msgBody, ((float) (this.width / 2 - VVDScreen.getInstance().getTextRenderer().getWidth(msgBody) / 2)), ((float) (this.height / 2)), 16777215);
-            VVDScreen.getInstance().getTextRenderer().draw(matrices, msgBody2, ((float) (this.width / 2 - VVDScreen.getInstance().getTextRenderer().getWidth(msgBody2) / 2)), ((float) (this.height / 2) + 16), 16777215);
-            VVDScreen.getInstance().getTextRenderer().draw(matrices, msgBody3, ((float) (this.width / 2 - VVDScreen.getInstance().getTextRenderer().getWidth(msgBody3) / 2)), ((float) (this.height / 2) + 32), 16777215);
+            VVDScreen.getInstance().getTextRenderer().draw(matrices, msgHeader,
+                    ((float) (this.width / 2 - VVDScreen.getInstance().getTextRenderer().getWidth(msgHeader) / 2)),
+                    ((float) (this.height / 2) - 32), 16777215);
+            VVDScreen.getInstance().getTextRenderer().draw(matrices, msgHeader2,
+                    ((float) (this.width / 2 - VVDScreen.getInstance().getTextRenderer().getWidth(msgHeader2) / 2)),
+                    ((float) (this.height / 2) - 16), 16777215);
+            VVDScreen.getInstance().getTextRenderer().draw(matrices, msgBody,
+                    ((float) (this.width / 2 - VVDScreen.getInstance().getTextRenderer().getWidth(msgBody) / 2)),
+                    ((float) (this.height / 2)), 16777215);
+            VVDScreen.getInstance().getTextRenderer().draw(matrices, msgBody2,
+                    ((float) (this.width / 2 - VVDScreen.getInstance().getTextRenderer().getWidth(msgBody2) / 2)),
+                    ((float) (this.height / 2) + 16), 16777215);
+            VVDScreen.getInstance().getTextRenderer().draw(matrices, msgBody3,
+                    ((float) (this.width / 2 - VVDScreen.getInstance().getTextRenderer().getWidth(msgBody3) / 2)),
+                    ((float) (this.height / 2) + 32), 16777215);
         }
     }
 
@@ -247,8 +284,12 @@ public class PackListWidget extends EntryListWidget<PackListWidget.PackEntry> {
             PackListWidget.this.setSelected(this);
         }
 
-        public void render(MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            VVDScreen.getInstance().getTextRenderer().drawWithShadow(matrices, this.displayName, ((float) (PackListWidget.this.width / 2 - VVDScreen.getInstance().getTextRenderer().getWidth(this.displayName) / 2)), y + 1, 16777215);
+        public void render(MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX,
+                int mouseY, boolean hovered, float tickDelta) {
+            VVDScreen.getInstance().getTextRenderer().drawWithShadow(matrices, this.displayName,
+                    ((float) (PackListWidget.this.width / 2
+                            - VVDScreen.getInstance().getTextRenderer().getWidth(this.displayName) / 2)),
+                    y + 1, 16777215);
             this.renderDescription(matrices, y);
         }
 
@@ -257,10 +298,17 @@ public class PackListWidget extends EntryListWidget<PackListWidget.PackEntry> {
             int maxWidth = Math.min(280, PackListWidget.this.getRowWidth() - 4);
 
             if (textWidth > maxWidth) {
-                String description = VVDScreen.getInstance().getTextRenderer().trimToWidth(this.description, maxWidth - VVDScreen.getInstance().getTextRenderer().getWidth("...")) + "...";
-                VVDScreen.getInstance().getTextRenderer().drawWithShadow(matrices, description, ((float) (PackListWidget.this.width / 2 - VVDScreen.getInstance().getTextRenderer().getWidth(description) / 2)), y + 13, 16777215);
+                String description = VVDScreen.getInstance().getTextRenderer().trimToWidth(this.description,
+                        maxWidth - VVDScreen.getInstance().getTextRenderer().getWidth("...")) + "...";
+                VVDScreen.getInstance().getTextRenderer().drawWithShadow(matrices, description,
+                        ((float) (PackListWidget.this.width / 2
+                                - VVDScreen.getInstance().getTextRenderer().getWidth(description) / 2)),
+                        y + 13, 16777215);
             } else {
-                VVDScreen.getInstance().getTextRenderer().drawWithShadow(matrices, this.description, ((float) (PackListWidget.this.width / 2 - VVDScreen.getInstance().getTextRenderer().getWidth(this.description) / 2)), y + 13, 16777215);
+                VVDScreen.getInstance().getTextRenderer().drawWithShadow(matrices, this.description,
+                        ((float) (PackListWidget.this.width / 2
+                                - VVDScreen.getInstance().getTextRenderer().getWidth(this.description) / 2)),
+                        y + 13, 16777215);
             }
         }
 

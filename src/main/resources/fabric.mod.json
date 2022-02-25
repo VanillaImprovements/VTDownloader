@@ -1,10 +1,10 @@
 {
     "schemaVersion": 1,
-    "id": "vt_downloader",
+    "id": "vv_downloader",
     "version": "${version}",
 
-    "name": "VTDownloader",
-    "description": "Pick and download Vanilla Tweaks resource packs directly from your Minecraft client!\n\nCredits:\nVanilla Tweaks: https://vanillatweaks.net/",
+    "name": "VVDownloader",
+    "description": "Pick and download Various Vanilla resource packs directly from your Minecraft client!\n\nCredits:\nVT Downloader: https://github.com/ByMartrixx/VTDownloader",
     "authors": [
         "ByMartrixx"
     ],
@@ -14,16 +14,16 @@
     },
 
     "license": "MIT",
-    "icon": "assets/vt_downloader/icon.png",
+    "icon": "assets/vv_downloader/icon.png",
 
     "environment": "client",
     "entrypoints": {
         "client": [
-            "me.bymartrixx.vtd.VTDMod"
+            "me.bymartrixx.vvd.VVDMod"
         ]
     },
     "mixins": [
-        "vt_downloader.mixins.json"
+        "vv_downloader.mixins.json"
     ],
 
     "depends": {

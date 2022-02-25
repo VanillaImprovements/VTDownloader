@@ -1,6 +1,6 @@
 package me.bymartrixx.vvd.mixin;
 
-import me.bymartrixx.vvd.gui.vvdScreen;
+import me.bymartrixx.vvd.gui.VVDScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.pack.PackScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -18,7 +18,8 @@ import java.io.File;
 
 @Mixin(PackScreen.class)
 public class PackScreenMixin extends Screen {
-    private static final Text vvd_RESOURCE_PACK_SUBTITLE = new TranslatableText("vvd.resourcePack.subtitle").formatted(Formatting.GRAY);
+    private static final Text vvd_RESOURCE_PACK_SUBTITLE = new TranslatableText("vvd.resourcePack.subtitle")
+            .formatted(Formatting.GRAY);
     @Shadow
     @Final
     private File file;
@@ -31,9 +32,10 @@ public class PackScreenMixin extends Screen {
     private void addvvdButton(CallbackInfo info) {
         // Checks if it is the resource pack screen and not the data pack screen
         if (this.file == this.client.getResourcePackDir()) {
-            this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height - 24, 150, 20, new TranslatableText("vvd.resourcePack.button"), button -> {
-                this.client.setScreen(new vvdScreen(this, vvd_RESOURCE_PACK_SUBTITLE));
-            }));
+            this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height - 24, 150, 20,
+                    new TranslatableText("vvd.resourcePack.button"), button -> {
+                        this.client.setScreen(new VVDScreen(this, vvd_RESOURCE_PACK_SUBTITLE));
+                    }));
         }
     }
 }

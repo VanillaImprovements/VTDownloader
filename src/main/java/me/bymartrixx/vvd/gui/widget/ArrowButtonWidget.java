@@ -20,7 +20,8 @@ public class ArrowButtonWidget extends ButtonWidget {
         this.arrowType = arrowType;
     }
 
-    private static void drawArrowTexture(MatrixStack matrices, int x, int y, ArrowType arrowType, MinecraftClient client) {
+    private static void drawArrowTexture(MatrixStack matrices, int x, int y, ArrowType arrowType,
+            MinecraftClient client) {
         RenderSystem.setShaderTexture(0, ARROWS_TEXTURE);
 
         float u;
@@ -52,12 +53,13 @@ public class ArrowButtonWidget extends ButtonWidget {
         RenderSystem.setShaderTexture(0, WIDGETS_TEXTURE);
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
-        int i = this.getYImage(this.method_25367());
+        int i = this.getYImage(this.isHoveredOrFocused());
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
         this.drawTexture(matrices, this.x, this.y, 0, 46 + i * 20, this.width / 2, this.height);
-        this.drawTexture(matrices, this.x + this.width / 2, this.y, 200 - this.width / 2, 46 + i * 20, this.width / 2, this.height);
+        this.drawTexture(matrices, this.x + this.width / 2, this.y, 200 - this.width / 2, 46 + i * 20, this.width / 2,
+                this.height);
         this.renderBackground(matrices, minecraftClient, mouseX, mouseY);
         int j = this.active ? 16777215 : 10526880;
 

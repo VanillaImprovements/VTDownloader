@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import me.bymartrixx.vvd.vvdMod;
+import me.bymartrixx.vvd.VVDMod;
 import me.bymartrixx.vvd.gui.VVDScreen;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
@@ -28,7 +28,8 @@ public class SelectedPacksListWidget extends EntryListWidget<SelectedPacksListWi
     private static final Identifier RESOURCE_PACKS_TEXTURE = new Identifier("textures/gui/resource_packs.png");
 
     public SelectedPacksListWidget() {
-        super(VVDScreen.getInstance().getClient(), 160, VVDScreen.getInstance().height, 80, VVDScreen.getInstance().height - 60, 16);
+        super(VVDScreen.getInstance().getClient(), 160, VVDScreen.getInstance().height, 80,
+                VVDScreen.getInstance().height - 60, 16);
         this.setRenderHeader(true, 16);
 
         this.updateEntries();
@@ -44,13 +45,16 @@ public class SelectedPacksListWidget extends EntryListWidget<SelectedPacksListWi
 
     protected void renderHeader(MatrixStack matrices, int x, int y, Tessellator tessellator) {
         Text text = new TranslatableText("vvd.selectedPacks").formatted(Formatting.BOLD, Formatting.UNDERLINE);
-        VVDScreen.getInstance().getTextRenderer().draw(matrices, text, ((float) (this.width / 2 - VVDScreen.getInstance().getTextRenderer().getWidth(text) / 2) + (VVDScreen.getInstance().width - 170)), Math.min(this.top + 3, y), 16777215);
+        VVDScreen.getInstance().getTextRenderer().draw(matrices, text,
+                ((float) (this.width / 2 - VVDScreen.getInstance().getTextRenderer().getWidth(text) / 2)
+                        + (VVDScreen.getInstance().width - 170)),
+                Math.min(this.top + 3, y), 16777215);
     }
 
     public void updateEntries() {
         this.children().clear();
 
-        JsonObject selectedPacks = vvdMod.GSON.toJsonTree(VVDScreen.getInstance().selectedPacks).getAsJsonObject();
+        JsonObject selectedPacks = VVDMod.GSON.toJsonTree(VVDScreen.getInstance().selectedPacks).getAsJsonObject();
         Set<Map.Entry<String, JsonElement>> selectedPacksCategories = selectedPacks.entrySet();
 
         for (Map.Entry<String, JsonElement> category : selectedPacksCategories) {
@@ -71,9 +75,12 @@ public class SelectedPacksListWidget extends EntryListWidget<SelectedPacksListWi
 
     /**
      * A cursed fix to #2. Bedrockify mixins into
-     * {@link EntryListWidget#render(MatrixStack, int, int, float)} and "disables" calls to
-     * {@link #renderBackground(MatrixStack)}. In order to "enable" it again, I have copied
-     * the method and, because it's a different method on a different class Bedrockify won't
+     * {@link EntryListWidget#render(MatrixStack, int, int, float)} and "disables"
+     * calls to
+     * {@link #renderBackground(MatrixStack)}. In order to "enable" it again, I have
+     * copied
+     * the method and, because it's a different method on a different class
+     * Bedrockify won't
      * affect it with a mixin.
      */
     @Deprecated
@@ -85,27 +92,36 @@ public class SelectedPacksListWidget extends EntryListWidget<SelectedPacksListWi
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
-        //this.field_33780 = (E)(this.isMouseOver((double)mouseX, (double)mouseY) ? this.getEntryAtPosition((double)mouseX, (double)mouseY) : null);
-        //if (this.renderBackground) { // Private field, true
+        // this.field_33780 = (E)(this.isMouseOver((double)mouseX, (double)mouseY) ?
+        // this.getEntryAtPosition((double)mouseX, (double)mouseY) : null);
+        // if (this.renderBackground) { // Private field, true
         RenderSystem.setShaderTexture(0, DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         float f = 32.0F;
         bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
-        bufferBuilder.vertex(this.left, this.bottom, 0.0).texture((float)this.left / 32.0F, (float)(this.bottom + (int)this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255).next();
-        bufferBuilder.vertex(this.right, this.bottom, 0.0).texture((float)this.right / 32.0F, (float)(this.bottom + (int)this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255).next();
-        bufferBuilder.vertex(this.right, this.top, 0.0).texture((float)this.right / 32.0F, (float)(this.top + (int)this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255).next();
-        bufferBuilder.vertex(this.left, this.top, 0.0).texture((float)this.left / 32.0F, (float)(this.top + (int)this.getScrollAmount()) / 32.0F).color(32, 32, 32, 255).next();
+        bufferBuilder.vertex(this.left, this.bottom, 0.0)
+                .texture((float) this.left / 32.0F, (float) (this.bottom + (int) this.getScrollAmount()) / 32.0F)
+                .color(32, 32, 32, 255).next();
+        bufferBuilder.vertex(this.right, this.bottom, 0.0)
+                .texture((float) this.right / 32.0F, (float) (this.bottom + (int) this.getScrollAmount()) / 32.0F)
+                .color(32, 32, 32, 255).next();
+        bufferBuilder.vertex(this.right, this.top, 0.0)
+                .texture((float) this.right / 32.0F, (float) (this.top + (int) this.getScrollAmount()) / 32.0F)
+                .color(32, 32, 32, 255).next();
+        bufferBuilder.vertex(this.left, this.top, 0.0)
+                .texture((float) this.left / 32.0F, (float) (this.top + (int) this.getScrollAmount()) / 32.0F)
+                .color(32, 32, 32, 255).next();
         tessellator.draw();
-        //}
+        // }
 
         int k = this.getRowLeft();
-        int l = this.top + 4 - (int)this.getScrollAmount();
-        //if (this.renderHeader) { // Private field, true
+        int l = this.top + 4 - (int) this.getScrollAmount();
+        // if (this.renderHeader) { // Private field, true
         this.renderHeader(matrices, k, l, tessellator);
-        //}
+        // }
 
         this.renderList(matrices, k, l, mouseX, mouseY, delta);
-        //if (this.renderHorizontalShadows) { // Private field, true
+        // if (this.renderHorizontalShadows) { // Private field, true
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         RenderSystem.setShaderTexture(0, DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
         RenderSystem.enableDepthTest();
@@ -113,19 +129,28 @@ public class SelectedPacksListWidget extends EntryListWidget<SelectedPacksListWi
         float g = 32.0F;
         int m = -100;
         bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
-        bufferBuilder.vertex(this.left, this.top, -100.0).texture(0.0F, (float)this.top / 32.0F).color(64, 64, 64, 255).next();
-        bufferBuilder.vertex(this.left + this.width, this.top, -100.0).texture((float)this.width / 32.0F, (float)this.top / 32.0F).color(64, 64, 64, 255).next();
-        bufferBuilder.vertex(this.left + this.width, 0.0, -100.0).texture((float)this.width / 32.0F, 0.0F).color(64, 64, 64, 255).next();
+        bufferBuilder.vertex(this.left, this.top, -100.0).texture(0.0F, (float) this.top / 32.0F).color(64, 64, 64, 255)
+                .next();
+        bufferBuilder.vertex(this.left + this.width, this.top, -100.0)
+                .texture((float) this.width / 32.0F, (float) this.top / 32.0F).color(64, 64, 64, 255).next();
+        bufferBuilder.vertex(this.left + this.width, 0.0, -100.0).texture((float) this.width / 32.0F, 0.0F)
+                .color(64, 64, 64, 255).next();
         bufferBuilder.vertex(this.left, 0.0, -100.0).texture(0.0F, 0.0F).color(64, 64, 64, 255).next();
-        bufferBuilder.vertex(this.left, this.height, -100.0).texture(0.0F, (float)this.height / 32.0F).color(64, 64, 64, 255).next();
-        bufferBuilder.vertex(this.left + this.width, this.height, -100.0).texture((float)this.width / 32.0F, (float)this.height / 32.0F).color(64, 64, 64, 255).next();
-        bufferBuilder.vertex(this.left + this.width, this.bottom, -100.0).texture((float)this.width / 32.0F, (float)this.bottom / 32.0F).color(64, 64, 64, 255).next();
-        bufferBuilder.vertex(this.left, this.bottom, -100.0).texture(0.0F, (float)this.bottom / 32.0F).color(64, 64, 64, 255).next();
+        bufferBuilder.vertex(this.left, this.height, -100.0).texture(0.0F, (float) this.height / 32.0F)
+                .color(64, 64, 64, 255).next();
+        bufferBuilder.vertex(this.left + this.width, this.height, -100.0)
+                .texture((float) this.width / 32.0F, (float) this.height / 32.0F).color(64, 64, 64, 255).next();
+        bufferBuilder.vertex(this.left + this.width, this.bottom, -100.0)
+                .texture((float) this.width / 32.0F, (float) this.bottom / 32.0F).color(64, 64, 64, 255).next();
+        bufferBuilder.vertex(this.left, this.bottom, -100.0).texture(0.0F, (float) this.bottom / 32.0F)
+                .color(64, 64, 64, 255).next();
         tessellator.draw();
         RenderSystem.depthFunc(515);
         RenderSystem.disableDepthTest();
         RenderSystem.enableBlend();
-        RenderSystem.blendFuncSeparate(GlStateManager.class_4535.SRC_ALPHA, GlStateManager.class_4534.ONE_MINUS_SRC_ALPHA, GlStateManager.class_4535.ZERO, GlStateManager.class_4534.ONE);
+        RenderSystem.blendFuncSeparate(GlStateManager.class_4535.SRC_ALPHA,
+                GlStateManager.class_4534.ONE_MINUS_SRC_ALPHA, GlStateManager.class_4535.ZERO,
+                GlStateManager.class_4534.ONE);
         RenderSystem.disableTexture();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         int n = 4;
@@ -139,15 +164,16 @@ public class SelectedPacksListWidget extends EntryListWidget<SelectedPacksListWi
         bufferBuilder.vertex(this.right, this.bottom - 4, 0.0).color(0, 0, 0, 0).next();
         bufferBuilder.vertex(this.left, this.bottom - 4, 0.0).color(0, 0, 0, 0).next();
         tessellator.draw();
-        //}
+        // }
 
         int o = this.getMaxScroll();
         if (o > 0) {
             RenderSystem.disableTexture();
             RenderSystem.setShader(GameRenderer::getPositionColorShader);
-            int p = (int)((float)((this.bottom - this.top) * (this.bottom - this.top)) / (float)this.getMaxPosition());
+            int p = (int) ((float) ((this.bottom - this.top) * (this.bottom - this.top))
+                    / (float) this.getMaxPosition());
             p = MathHelper.clamp(p, 32, this.bottom - this.top - 8);
-            int q = (int)this.getScrollAmount() * (this.bottom - this.top - p) / o + this.top;
+            int q = (int) this.getScrollAmount() * (this.bottom - this.top - p) / o + this.top;
             if (q < this.top) {
                 q = this.top;
             }
@@ -182,7 +208,8 @@ public class SelectedPacksListWidget extends EntryListWidget<SelectedPacksListWi
          */
         public final boolean isCategory;
         /**
-         * If {@link #isCategory} is true, the name of the category, if it is false, the name of the parent category.
+         * If {@link #isCategory} is true, the name of the category, if it is false, the
+         * name of the parent category.
          */
         public final String categoryName;
         private final SelectedPacksListWidget widget;
@@ -204,14 +231,16 @@ public class SelectedPacksListWidget extends EntryListWidget<SelectedPacksListWi
         }
 
         /**
-         * @return the pack name if {@link #isCategory} is false, or {@code ""} if it is true.
+         * @return the pack name if {@link #isCategory} is false, or {@code ""} if it is
+         *         true.
          */
         @SuppressWarnings("unused")
         public String getPackName() {
             return packName;
         }
 
-        public void render(MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+        public void render(MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX,
+                int mouseY, boolean hovered, float tickDelta) {
             if (hovered) {
                 fill(matrices, x, y, x + entryWidth, y + 16, -1601138544);
             }
@@ -220,10 +249,13 @@ public class SelectedPacksListWidget extends EntryListWidget<SelectedPacksListWi
             int textWidth = VVDScreen.getInstance().getTextRenderer().getWidth(text);
 
             if (textWidth > this.widget.getRowWidth() - (this.isCategory ? 24 : 36)) {
-                text = VVDScreen.getInstance().getTextRenderer().trimToWidth(text, this.widget.getRowWidth() - (this.isCategory ? 24 : 36) - VVDScreen.getInstance().getTextRenderer().getWidth("...")) + "...";
+                text = VVDScreen.getInstance().getTextRenderer().trimToWidth(text, this.widget.getRowWidth()
+                        - (this.isCategory ? 24 : 36) - VVDScreen.getInstance().getTextRenderer().getWidth("..."))
+                        + "...";
             }
 
-            VVDScreen.getInstance().getTextRenderer().drawWithShadow(matrices, text, x + (this.isCategory ? 4 : 16), y + 4, 16777215);
+            VVDScreen.getInstance().getTextRenderer().drawWithShadow(matrices, text, x + (this.isCategory ? 4 : 16),
+                    y + 4, 16777215);
 
             // Render up/down buttons
             if (hovered) {
@@ -234,17 +266,21 @@ public class SelectedPacksListWidget extends EntryListWidget<SelectedPacksListWi
 
                 if (this.canMoveUp()) {
                     if (localMouseX > entryWidth - 8 && localMouseY < 8) {
-                        DrawableHelper.drawTexture(matrices, x + entryWidth - 16, y, 16, 16, 96.0F, 32.0F, 32, 32, 256, 256);
+                        DrawableHelper.drawTexture(matrices, x + entryWidth - 16, y, 16, 16, 96.0F, 32.0F, 32, 32, 256,
+                                256);
                     } else {
-                        DrawableHelper.drawTexture(matrices, x + entryWidth - 16, y, 16, 16, 96.0F, 0.0F, 32, 32, 256, 256);
+                        DrawableHelper.drawTexture(matrices, x + entryWidth - 16, y, 16, 16, 96.0F, 0.0F, 32, 32, 256,
+                                256);
                     }
                 }
 
                 if (this.canMoveDown()) {
                     if (localMouseX > entryWidth - 8 && localMouseY > 8) {
-                        DrawableHelper.drawTexture(matrices, x + entryWidth - 16, y, 16, 16, 64.0F, 32.0F, 32, 32, 256, 256);
+                        DrawableHelper.drawTexture(matrices, x + entryWidth - 16, y, 16, 16, 64.0F, 32.0F, 32, 32, 256,
+                                256);
                     } else {
-                        DrawableHelper.drawTexture(matrices, x + entryWidth - 16, y, 16, 16, 64.0F, 0.0F, 32, 32, 256, 256);
+                        DrawableHelper.drawTexture(matrices, x + entryWidth - 16, y, 16, 16, 64.0F, 0.0F, 32, 32, 256,
+                                256);
                     }
                 }
             }
@@ -295,7 +331,8 @@ public class SelectedPacksListWidget extends EntryListWidget<SelectedPacksListWi
                 Iterator<String> categoriesIterator = selectedPacks.keySet().iterator();
 
                 String previousCategoryName = "";
-                // Save previous category name, if this category name is found, keep previous category name
+                // Save previous category name, if this category name is found, keep previous
+                // category name
                 while (categoriesIterator.hasNext()) {
                     String categoryName = categoriesIterator.next();
 
@@ -310,16 +347,21 @@ public class SelectedPacksListWidget extends EntryListWidget<SelectedPacksListWi
                     Map<String, List<String>> newSelectedPacks = new LinkedHashMap<>();
 
                     // Copy values to new map, where the order is changed
-                    // When the previous entry is found, put this entry (in the place of the previous entry), skip, and put the previous entry
+                    // When the previous entry is found, put this entry (in the place of the
+                    // previous entry), skip, and put the previous entry
                     for (int i = 0; i < selectedPacks.size(); ++i) {
                         String categoryName = (String) selectedPacks.keySet().toArray()[i];
 
                         if (!categoryName.equals(previousCategoryName)) {
                             newSelectedPacks.put(categoryName, selectedPacks.get(categoryName));
                         } else {
-                            newSelectedPacks.put(this.categoryName, selectedPacks.get(this.categoryName)); // Put this entry
+                            newSelectedPacks.put(this.categoryName, selectedPacks.get(this.categoryName)); // Put this
+                                                                                                           // entry
                             ++i; // Skip
-                            newSelectedPacks.put(previousCategoryName, selectedPacks.get(previousCategoryName)); // Put the previous entry
+                            newSelectedPacks.put(previousCategoryName, selectedPacks.get(previousCategoryName)); // Put
+                                                                                                                 // the
+                                                                                                                 // previous
+                                                                                                                 // entry
                         }
                     }
 
@@ -331,7 +373,8 @@ public class SelectedPacksListWidget extends EntryListWidget<SelectedPacksListWi
                 Iterator<String> packsIterator = selectedPacksOfCategory.iterator();
 
                 String previousPackName = "";
-                // Save previous category name, if this category name is found, keep previous category name
+                // Save previous category name, if this category name is found, keep previous
+                // category name
                 while (packsIterator.hasNext()) {
                     String packName = packsIterator.next();
 
@@ -346,7 +389,8 @@ public class SelectedPacksListWidget extends EntryListWidget<SelectedPacksListWi
                     List<String> newSelectedPacksOfCategory = new ArrayList<>();
 
                     // Copy values to new list, where the order is changed
-                    // When the previous entry is found, put this entry (in the place of the previous entry), skip, and put the previous entry
+                    // When the previous entry is found, put this entry (in the place of the
+                    // previous entry), skip, and put the previous entry
                     for (int i = 0; i < selectedPacksOfCategory.size(); ++i) {
                         String packName = selectedPacksOfCategory.get(i);
 
@@ -383,16 +427,19 @@ public class SelectedPacksListWidget extends EntryListWidget<SelectedPacksListWi
                     Map<String, List<String>> newSelectedPacks = new LinkedHashMap<>();
 
                     // Copy values to new map, where the order is changed
-                    // When this entry is found, put next entry (in the place of this entry), skip, and put this entry
+                    // When this entry is found, put next entry (in the place of this entry), skip,
+                    // and put this entry
                     for (int i = 0; i < selectedPacks.size(); ++i) {
                         String categoryName = (String) selectedPacks.keySet().toArray()[i];
 
                         if (!categoryName.equals(this.categoryName)) {
                             newSelectedPacks.put(categoryName, selectedPacks.get(categoryName));
                         } else {
-                            newSelectedPacks.put(nextCategoryName, selectedPacks.get(nextCategoryName)); // Put next entry
+                            newSelectedPacks.put(nextCategoryName, selectedPacks.get(nextCategoryName)); // Put next
+                                                                                                         // entry
                             ++i; // Skip
-                            newSelectedPacks.put(this.categoryName, selectedPacks.get(this.categoryName)); // Put this entry
+                            newSelectedPacks.put(this.categoryName, selectedPacks.get(this.categoryName)); // Put this
+                                                                                                           // entry
                         }
                     }
 
@@ -417,7 +464,8 @@ public class SelectedPacksListWidget extends EntryListWidget<SelectedPacksListWi
                     List<String> newSelectedPacksOfCategory = new ArrayList<>();
 
                     // Copy values to new list, where the order is changed
-                    // When this entry is found, put next entry (in the place of this entry), skip, and put this entry
+                    // When this entry is found, put next entry (in the place of this entry), skip,
+                    // and put this entry
                     for (int i = 0; i < selectedPacksOfCategory.size(); ++i) {
                         String packName = selectedPacksOfCategory.get(i);
 
