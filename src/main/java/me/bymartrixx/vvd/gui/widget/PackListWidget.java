@@ -1,12 +1,12 @@
-package me.bymartrixx.vtd.gui.widget;
+package me.bymartrixx.vvd.gui.widget;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import me.bymartrixx.vtd.VTDMod;
-import me.bymartrixx.vtd.gui.VTDScreen;
+import me.bymartrixx.vvd.vvdMod;
+import me.bymartrixx.vvd.gui.VVDScreen;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.EntryListWidget;
@@ -32,7 +32,7 @@ public class PackListWidget extends EntryListWidget<PackListWidget.PackEntry> {
     private final boolean displayEntries;
 
     public PackListWidget(JsonArray packs, String categoryName) {
-        super(VTDScreen.getInstance().getClient(), VTDScreen.getInstance().width - 180, VTDScreen.getInstance().height, 60, VTDScreen.getInstance().height - 40, 32);
+        super(VVDScreen.getInstance().getClient(), VVDScreen.getInstance().width - 180, VVDScreen.getInstance().height, 60, VVDScreen.getInstance().height - 40, 32);
         this.displayEntries = true;
 
         this.setRenderHeader(true, 16);
@@ -48,7 +48,7 @@ public class PackListWidget extends EntryListWidget<PackListWidget.PackEntry> {
     }
 
     public PackListWidget() {
-        super(VTDScreen.getInstance().getClient(), VTDScreen.getInstance().width - 180, VTDScreen.getInstance().height, 60, VTDScreen.getInstance().height - 40, 32);
+        super(VVDScreen.getInstance().getClient(), VVDScreen.getInstance().width - 180, VVDScreen.getInstance().height, 60, VVDScreen.getInstance().height - 40, 32);
         this.displayEntries = false;
         this.categoryName = "Error!";
         this.oneEntry = false;
@@ -73,10 +73,10 @@ public class PackListWidget extends EntryListWidget<PackListWidget.PackEntry> {
 
         if (this.children().contains(entry) || !child) {
             String packName = entry.name;
-            if (!VTDScreen.getInstance().isPackSelected(this.categoryName, packName)) {
-                VTDScreen.getInstance().addSelectedPack(this.categoryName, packName, this.oneEntry);
+            if (!VVDScreen.getInstance().isPackSelected(this.categoryName, packName)) {
+                VVDScreen.getInstance().addSelectedPack(this.categoryName, packName, this.oneEntry);
             } else {
-                VTDScreen.getInstance().removeSelectedPack(this.categoryName, packName);
+                VVDScreen.getInstance().removeSelectedPack(this.categoryName, packName);
             }
         }
     }
@@ -84,7 +84,7 @@ public class PackListWidget extends EntryListWidget<PackListWidget.PackEntry> {
     public boolean isSelected(PackListWidget.PackEntry entry) {
         if (!this.children().contains(entry)) return false;
 
-        return VTDScreen.getInstance().isPackSelected(this.categoryName, entry.name);
+        return VVDScreen.getInstance().isPackSelected(this.categoryName, entry.name);
     }
 
     protected boolean isSelectedEntry(int index) {
@@ -93,7 +93,7 @@ public class PackListWidget extends EntryListWidget<PackListWidget.PackEntry> {
 
     protected void renderHeader(MatrixStack matrices, int x, int y, Tessellator tessellator) {
         Text text = new LiteralText(this.categoryName).formatted(Formatting.BOLD, Formatting.UNDERLINE);
-        VTDScreen.getInstance().getTextRenderer().draw(matrices, text, ((float) (this.width / 2 - VTDScreen.getInstance().getTextRenderer().getWidth(text) / 2)), Math.min(this.top + 3, y), 16777215);
+        VVDScreen.getInstance().getTextRenderer().draw(matrices, text, ((float) (this.width / 2 - VVDScreen.getInstance().getTextRenderer().getWidth(text) / 2)), Math.min(this.top + 3, y), 16777215);
     }
 
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
@@ -195,17 +195,17 @@ public class PackListWidget extends EntryListWidget<PackListWidget.PackEntry> {
             RenderSystem.disableBlend();
             // End of cursed fix for #2
         } else {
-            Text msgHeader = new TranslatableText("vtd.packError.title.1").formatted(Formatting.BOLD, Formatting.ITALIC);
-            Text msgHeader2 = new TranslatableText("vtd.packError.title.2").formatted(Formatting.BOLD, Formatting.ITALIC);
-            Text msgBody = new TranslatableText("vtd.packError.body.1");
-            Text msgBody2 = new TranslatableText("vtd.packError.body.2");
-            Text msgBody3 = new TranslatableText("vtd.packError.body.3", VTDMod.BASE_URL);
+            Text msgHeader = new TranslatableText("vvd.packError.title.1").formatted(Formatting.BOLD, Formatting.ITALIC);
+            Text msgHeader2 = new TranslatableText("vvd.packError.title.2").formatted(Formatting.BOLD, Formatting.ITALIC);
+            Text msgBody = new TranslatableText("vvd.packError.body.1");
+            Text msgBody2 = new TranslatableText("vvd.packError.body.2");
+            Text msgBody3 = new TranslatableText("vvd.packError.body.3", vvdMod.BASE_URL);
 
-            VTDScreen.getInstance().getTextRenderer().draw(matrices, msgHeader, ((float) (this.width / 2 - VTDScreen.getInstance().getTextRenderer().getWidth(msgHeader) / 2)), ((float) (this.height / 2) - 32), 16777215);
-            VTDScreen.getInstance().getTextRenderer().draw(matrices, msgHeader2, ((float) (this.width / 2 - VTDScreen.getInstance().getTextRenderer().getWidth(msgHeader2) / 2)), ((float) (this.height / 2) - 16), 16777215);
-            VTDScreen.getInstance().getTextRenderer().draw(matrices, msgBody, ((float) (this.width / 2 - VTDScreen.getInstance().getTextRenderer().getWidth(msgBody) / 2)), ((float) (this.height / 2)), 16777215);
-            VTDScreen.getInstance().getTextRenderer().draw(matrices, msgBody2, ((float) (this.width / 2 - VTDScreen.getInstance().getTextRenderer().getWidth(msgBody2) / 2)), ((float) (this.height / 2) + 16), 16777215);
-            VTDScreen.getInstance().getTextRenderer().draw(matrices, msgBody3, ((float) (this.width / 2 - VTDScreen.getInstance().getTextRenderer().getWidth(msgBody3) / 2)), ((float) (this.height / 2) + 32), 16777215);
+            VVDScreen.getInstance().getTextRenderer().draw(matrices, msgHeader, ((float) (this.width / 2 - VVDScreen.getInstance().getTextRenderer().getWidth(msgHeader) / 2)), ((float) (this.height / 2) - 32), 16777215);
+            VVDScreen.getInstance().getTextRenderer().draw(matrices, msgHeader2, ((float) (this.width / 2 - VVDScreen.getInstance().getTextRenderer().getWidth(msgHeader2) / 2)), ((float) (this.height / 2) - 16), 16777215);
+            VVDScreen.getInstance().getTextRenderer().draw(matrices, msgBody, ((float) (this.width / 2 - VVDScreen.getInstance().getTextRenderer().getWidth(msgBody) / 2)), ((float) (this.height / 2)), 16777215);
+            VVDScreen.getInstance().getTextRenderer().draw(matrices, msgBody2, ((float) (this.width / 2 - VVDScreen.getInstance().getTextRenderer().getWidth(msgBody2) / 2)), ((float) (this.height / 2) + 16), 16777215);
+            VVDScreen.getInstance().getTextRenderer().draw(matrices, msgBody3, ((float) (this.width / 2 - VVDScreen.getInstance().getTextRenderer().getWidth(msgBody3) / 2)), ((float) (this.height / 2) + 32), 16777215);
         }
     }
 
@@ -248,19 +248,19 @@ public class PackListWidget extends EntryListWidget<PackListWidget.PackEntry> {
         }
 
         public void render(MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            VTDScreen.getInstance().getTextRenderer().drawWithShadow(matrices, this.displayName, ((float) (PackListWidget.this.width / 2 - VTDScreen.getInstance().getTextRenderer().getWidth(this.displayName) / 2)), y + 1, 16777215);
+            VVDScreen.getInstance().getTextRenderer().drawWithShadow(matrices, this.displayName, ((float) (PackListWidget.this.width / 2 - VVDScreen.getInstance().getTextRenderer().getWidth(this.displayName) / 2)), y + 1, 16777215);
             this.renderDescription(matrices, y);
         }
 
         private void renderDescription(MatrixStack matrices, int y) {
-            int textWidth = VTDScreen.getInstance().getTextRenderer().getWidth(this.description);
+            int textWidth = VVDScreen.getInstance().getTextRenderer().getWidth(this.description);
             int maxWidth = Math.min(280, PackListWidget.this.getRowWidth() - 4);
 
             if (textWidth > maxWidth) {
-                String description = VTDScreen.getInstance().getTextRenderer().trimToWidth(this.description, maxWidth - VTDScreen.getInstance().getTextRenderer().getWidth("...")) + "...";
-                VTDScreen.getInstance().getTextRenderer().drawWithShadow(matrices, description, ((float) (PackListWidget.this.width / 2 - VTDScreen.getInstance().getTextRenderer().getWidth(description) / 2)), y + 13, 16777215);
+                String description = VVDScreen.getInstance().getTextRenderer().trimToWidth(this.description, maxWidth - VVDScreen.getInstance().getTextRenderer().getWidth("...")) + "...";
+                VVDScreen.getInstance().getTextRenderer().drawWithShadow(matrices, description, ((float) (PackListWidget.this.width / 2 - VVDScreen.getInstance().getTextRenderer().getWidth(description) / 2)), y + 13, 16777215);
             } else {
-                VTDScreen.getInstance().getTextRenderer().drawWithShadow(matrices, this.description, ((float) (PackListWidget.this.width / 2 - VTDScreen.getInstance().getTextRenderer().getWidth(this.description) / 2)), y + 13, 16777215);
+                VVDScreen.getInstance().getTextRenderer().drawWithShadow(matrices, this.description, ((float) (PackListWidget.this.width / 2 - VVDScreen.getInstance().getTextRenderer().getWidth(this.description) / 2)), y + 13, 16777215);
             }
         }
 

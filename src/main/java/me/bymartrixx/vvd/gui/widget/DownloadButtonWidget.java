@@ -1,6 +1,6 @@
-package me.bymartrixx.vtd.gui.widget;
+package me.bymartrixx.vvd.gui.widget;
 
-import me.bymartrixx.vtd.gui.VTDScreen;
+import me.bymartrixx.vvd.gui.VVDScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 
@@ -67,7 +67,7 @@ public class DownloadButtonWidget extends ButtonWidget {
         if (this.messageTicks > 0) {
             --this.messageTicks;
             if (this.messageTicks == 0)
-                VTDScreen.getInstance().resetDownloadProgress();
+                VVDScreen.getInstance().resetDownloadProgress();
         }
     }
 }

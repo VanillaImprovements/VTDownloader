@@ -1,12 +1,12 @@
-package me.bymartrixx.vtd.gui.widget;
+package me.bymartrixx.vvd.gui.widget;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import me.bymartrixx.vtd.VTDMod;
-import me.bymartrixx.vtd.gui.VTDScreen;
+import me.bymartrixx.vvd.vvdMod;
+import me.bymartrixx.vvd.gui.VVDScreen;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.EntryListWidget;
@@ -28,7 +28,7 @@ public class SelectedPacksListWidget extends EntryListWidget<SelectedPacksListWi
     private static final Identifier RESOURCE_PACKS_TEXTURE = new Identifier("textures/gui/resource_packs.png");
 
     public SelectedPacksListWidget() {
-        super(VTDScreen.getInstance().getClient(), 160, VTDScreen.getInstance().height, 80, VTDScreen.getInstance().height - 60, 16);
+        super(VVDScreen.getInstance().getClient(), 160, VVDScreen.getInstance().height, 80, VVDScreen.getInstance().height - 60, 16);
         this.setRenderHeader(true, 16);
 
         this.updateEntries();
@@ -43,14 +43,14 @@ public class SelectedPacksListWidget extends EntryListWidget<SelectedPacksListWi
     }
 
     protected void renderHeader(MatrixStack matrices, int x, int y, Tessellator tessellator) {
-        Text text = new TranslatableText("vtd.selectedPacks").formatted(Formatting.BOLD, Formatting.UNDERLINE);
-        VTDScreen.getInstance().getTextRenderer().draw(matrices, text, ((float) (this.width / 2 - VTDScreen.getInstance().getTextRenderer().getWidth(text) / 2) + (VTDScreen.getInstance().width - 170)), Math.min(this.top + 3, y), 16777215);
+        Text text = new TranslatableText("vvd.selectedPacks").formatted(Formatting.BOLD, Formatting.UNDERLINE);
+        VVDScreen.getInstance().getTextRenderer().draw(matrices, text, ((float) (this.width / 2 - VVDScreen.getInstance().getTextRenderer().getWidth(text) / 2) + (VVDScreen.getInstance().width - 170)), Math.min(this.top + 3, y), 16777215);
     }
 
     public void updateEntries() {
         this.children().clear();
 
-        JsonObject selectedPacks = VTDMod.GSON.toJsonTree(VTDScreen.getInstance().selectedPacks).getAsJsonObject();
+        JsonObject selectedPacks = vvdMod.GSON.toJsonTree(VVDScreen.getInstance().selectedPacks).getAsJsonObject();
         Set<Map.Entry<String, JsonElement>> selectedPacksCategories = selectedPacks.entrySet();
 
         for (Map.Entry<String, JsonElement> category : selectedPacksCategories) {
@@ -217,20 +217,20 @@ public class SelectedPacksListWidget extends EntryListWidget<SelectedPacksListWi
             }
 
             String text = this.isCategory ? this.categoryName : this.packName;
-            int textWidth = VTDScreen.getInstance().getTextRenderer().getWidth(text);
+            int textWidth = VVDScreen.getInstance().getTextRenderer().getWidth(text);
 
             if (textWidth > this.widget.getRowWidth() - (this.isCategory ? 24 : 36)) {
-                text = VTDScreen.getInstance().getTextRenderer().trimToWidth(text, this.widget.getRowWidth() - (this.isCategory ? 24 : 36) - VTDScreen.getInstance().getTextRenderer().getWidth("...")) + "...";
+                text = VVDScreen.getInstance().getTextRenderer().trimToWidth(text, this.widget.getRowWidth() - (this.isCategory ? 24 : 36) - VVDScreen.getInstance().getTextRenderer().getWidth("...")) + "...";
             }
 
-            VTDScreen.getInstance().getTextRenderer().drawWithShadow(matrices, text, x + (this.isCategory ? 4 : 16), y + 4, 16777215);
+            VVDScreen.getInstance().getTextRenderer().drawWithShadow(matrices, text, x + (this.isCategory ? 4 : 16), y + 4, 16777215);
 
             // Render up/down buttons
             if (hovered) {
                 int localMouseX = mouseX - x;
                 int localMouseY = mouseY - y;
 
-                VTDScreen.getInstance().getClient().getTextureManager().bindTexture(RESOURCE_PACKS_TEXTURE);
+                VVDScreen.getInstance().getClient().getTextureManager().bindTexture(RESOURCE_PACKS_TEXTURE);
 
                 if (this.canMoveUp()) {
                     if (localMouseX > entryWidth - 8 && localMouseY < 8) {
@@ -273,25 +273,25 @@ public class SelectedPacksListWidget extends EntryListWidget<SelectedPacksListWi
 
         private boolean canMoveUp() {
             if (this.isCategory) {
-                return !VTDScreen.getInstance().selectedPacks.keySet().toArray()[0].equals(this.categoryName);
+                return !VVDScreen.getInstance().selectedPacks.keySet().toArray()[0].equals(this.categoryName);
             } else {
-                return !VTDScreen.getInstance().selectedPacks.get(this.categoryName).toArray()[0].equals(this.packName);
+                return !VVDScreen.getInstance().selectedPacks.get(this.categoryName).toArray()[0].equals(this.packName);
             }
         }
 
         private boolean canMoveDown() {
             if (this.isCategory) {
-                Object[] categories = VTDScreen.getInstance().selectedPacks.keySet().toArray();
+                Object[] categories = VVDScreen.getInstance().selectedPacks.keySet().toArray();
                 return !categories[categories.length - 1].equals(this.categoryName);
             } else {
-                Object[] packs = VTDScreen.getInstance().selectedPacks.get(this.categoryName).toArray();
+                Object[] packs = VVDScreen.getInstance().selectedPacks.get(this.categoryName).toArray();
                 return !packs[packs.length - 1].equals(this.packName);
             }
         }
 
         private void moveUp() {
             if (this.isCategory) {
-                Map<String, List<String>> selectedPacks = VTDScreen.getInstance().selectedPacks;
+                Map<String, List<String>> selectedPacks = VVDScreen.getInstance().selectedPacks;
                 Iterator<String> categoriesIterator = selectedPacks.keySet().iterator();
 
                 String previousCategoryName = "";
@@ -323,11 +323,11 @@ public class SelectedPacksListWidget extends EntryListWidget<SelectedPacksListWi
                         }
                     }
 
-                    VTDScreen.getInstance().selectedPacks.clear();
-                    VTDScreen.getInstance().selectedPacks.putAll(newSelectedPacks);
+                    VVDScreen.getInstance().selectedPacks.clear();
+                    VVDScreen.getInstance().selectedPacks.putAll(newSelectedPacks);
                 }
             } else {
-                List<String> selectedPacksOfCategory = VTDScreen.getInstance().selectedPacks.get(this.categoryName);
+                List<String> selectedPacksOfCategory = VVDScreen.getInstance().selectedPacks.get(this.categoryName);
                 Iterator<String> packsIterator = selectedPacksOfCategory.iterator();
 
                 String previousPackName = "";
@@ -359,14 +359,14 @@ public class SelectedPacksListWidget extends EntryListWidget<SelectedPacksListWi
                         }
                     }
 
-                    VTDScreen.getInstance().selectedPacks.replace(this.categoryName, newSelectedPacksOfCategory);
+                    VVDScreen.getInstance().selectedPacks.replace(this.categoryName, newSelectedPacksOfCategory);
                 }
             }
         }
 
         private void moveDown() {
             if (this.isCategory) {
-                Map<String, List<String>> selectedPacks = VTDScreen.getInstance().selectedPacks;
+                Map<String, List<String>> selectedPacks = VVDScreen.getInstance().selectedPacks;
                 Iterator<String> categoriesIterator = selectedPacks.keySet().iterator();
 
                 String nextCategoryName = "";
@@ -396,11 +396,11 @@ public class SelectedPacksListWidget extends EntryListWidget<SelectedPacksListWi
                         }
                     }
 
-                    VTDScreen.getInstance().selectedPacks.clear();
-                    VTDScreen.getInstance().selectedPacks.putAll(newSelectedPacks);
+                    VVDScreen.getInstance().selectedPacks.clear();
+                    VVDScreen.getInstance().selectedPacks.putAll(newSelectedPacks);
                 }
             } else {
-                List<String> selectedPacksOfCategory = VTDScreen.getInstance().selectedPacks.get(this.categoryName);
+                List<String> selectedPacksOfCategory = VVDScreen.getInstance().selectedPacks.get(this.categoryName);
                 Iterator<String> packsIterator = selectedPacksOfCategory.iterator();
 
                 String nextPackName = "";
@@ -430,7 +430,7 @@ public class SelectedPacksListWidget extends EntryListWidget<SelectedPacksListWi
                         }
                     }
 
-                    VTDScreen.getInstance().selectedPacks.replace(this.categoryName, newSelectedPacksOfCategory);
+                    VVDScreen.getInstance().selectedPacks.replace(this.categoryName, newSelectedPacksOfCategory);
                 }
             }
         }

@@ -1,12 +1,12 @@
 plugins {
 	id 'fabric-loom' version '0.10-SNAPSHOT'
 	id 'maven-publish'
-	id 'com.modrinth.minotaur' version '1.2.1'
+	// id 'com.modrinth.minotaur' version '1.2.1'
 	id 'org.quiltmc.quilt-mappings-on-loom' version '3.1.2'
 	id 'io.github.juuxel.loom-quiltflower-mini' version '1.1.0'
 }
 
-import com.modrinth.minotaur.TaskModrinthUpload
+// import com.modrinth.minotaur.TaskModrinthUpload
 
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
@@ -88,16 +88,16 @@ quiltflower {
 	addToRuntimeClasspath.set(true)
 }
 
-task modrinth (type: TaskModrinthUpload, dependsOn: build) {
-	token = project.hasProperty('modrinth_token') ? project.property('modrinth_token') : System.getenv('MODRINTH_TOKEN')
-	projectId = '1E2sq1cp'
-	versionNumber = project.version
-	versionName = "VTDownloader ${project.mod_version} for Minecraft 1.18"
-	uploadFile = remapJar
-	changelog = "A changelog can be found at https://github.com/ByMartrixx/VTDownloader/releases/tag/${project.mod_version}"
-	addGameVersion('1.18')
-	addLoader('fabric')
-}
+// task modrinth (type: TaskModrinthUpload, dependsOn: build) {
+// 	token = project.hasProperty('modrinth_token') ? project.property('modrinth_token') : System.getenv('MODRINTH_TOKEN')
+// 	projectId = '1E2sq1cp'
+// 	versionNumber = project.version
+// 	versionName = "VVDownloader ${project.mod_version} for Minecraft 1.18"
+// 	uploadFile = remapJar
+// 	changelog = "A changelog can be found at https://github.com/ByMartrixx/VTDownloader/releases/tag/${project.mod_version}"
+// 	addGameVersion('1.18')
+// 	addLoader('fabric')
+// }
 
 // configure the maven publication
 publishing {

@@ -1,11 +1,11 @@
-package me.bymartrixx.vtd.gui;
+package me.bymartrixx.vvd.gui;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.systems.RenderSystem;
-import me.bymartrixx.vtd.VTDMod;
-import me.bymartrixx.vtd.gui.widget.*;
+import me.bymartrixx.vvd.VVDMod;
+import me.bymartrixx.vvd.gui.widget.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.hud.BackgroundHelper;
@@ -39,24 +39,24 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
 
-public class VTDScreen extends Screen {
-    private static VTDScreen instance;
+public class VVDScreen extends Screen {
+    private static VVDScreen instance;
     public final Map<String, List<String>> selectedPacks; // {"$category":["$pack","$pack"],"$category":["$pack"]}
     protected final Text subtitle;
     private final PackNameTextFieldWidget.TooltipSupplier TOOLTIP_SUPPLIER = (textField, nameValidity, matrices, mouseX, mouseY) -> {
         Text text = null;
         switch (nameValidity) {
             case RESERVED_WINDOWS:
-                text = new TranslatableText("vtd.fileNameValidity.reservedWindows");
+                text = new TranslatableText("vvd.fileNameValidity.reservedWindows");
                 break;
             case INVALID_WINDOWS:
-                text = new TranslatableText("vtd.fileNameValidity.invalidWindows");
+                text = new TranslatableText("vvd.fileNameValidity.invalidWindows");
                 break;
             case REGEX_DOESNT_MATCH:
-                text = new TranslatableText("vtd.fileNameValidity.regexDoesntMatch", PackNameTextFieldWidget.fileNameRegex);
+                text = new TranslatableText("vvd.fileNameValidity.regexDoesntMatch", PackNameTextFieldWidget.fileNameRegex);
                 break;
             case FILE_EXISTS:
-                text = new TranslatableText("vtd.fileNameValidity.fileExists");
+                text = new TranslatableText("vvd.fileNameValidity.fileExists");
                 break;
             case VALID:
             default:
@@ -84,22 +84,22 @@ public class VTDScreen extends Screen {
      */
     private float downloadProgress = -1.0F;
 
-    public VTDScreen(Screen previousScreen, Text subtitle) {
-        super(new TranslatableText("vtd.title"));
+    public VVDScreen(Screen previousScreen, Text subtitle) {
+        super(new TranslatableText("vvd.title"));
         this.previousScreen = previousScreen;
         this.selectedPacks = new LinkedHashMap<>();
         this.subtitle = subtitle;
 
-        VTDScreen.instance = this;
+        VVDScreen.instance = this;
     }
 
-    public VTDScreen(Screen previousScreen, Text subtitle, Map<String, List<String>> selectedPacks) {
-        super(new TranslatableText("vtd.title"));
+    public VVDScreen(Screen previousScreen, Text subtitle, Map<String, List<String>> selectedPacks) {
+        super(new TranslatableText("vvd.title"));
         this.previousScreen = previousScreen;
         this.selectedPacks = selectedPacks;
         this.subtitle = subtitle;
 
-        VTDScreen.instance = this;
+        VVDScreen.instance = this;
     }
 
     /**
@@ -115,7 +115,7 @@ public class VTDScreen extends Screen {
         return (width - 110) / 130 + 1;
     }
 
-    public static VTDScreen getInstance() {
+    public static VVDScreen getInstance() {
         return instance;
     }
 
@@ -138,16 +138,16 @@ public class VTDScreen extends Screen {
                     selectedPacks2.put(key, valuesReverse);
                 }
 
-                JsonObject selectedPacks = VTDMod.GSON.toJsonTree(selectedPacks2).getAsJsonObject();
+                JsonObject selectedPacks = VVDMod.GSON.toJsonTree(selectedPacks2).getAsJsonObject();
                 this.downloadProgress = 0.0F;
 
                 try (CloseableHttpClient client = HttpClients.createDefault()) {
                     // Get the download link
-                    HttpPost httpPost = new HttpPost(VTDMod.BASE_URL + "/assets/server/zipresourcepacks.php");
+                    HttpPost httpPost = new HttpPost(VVDMod.BASE_URL + "/assets/server/zipresourcepacks.php");
 
                     List<NameValuePair> params = new ArrayList<>();
-                    params.add(new BasicNameValuePair("version", VTDMod.MINECRAFT_VERSION));
-                    params.add(new BasicNameValuePair("packs", VTDMod.GSON.toJson(selectedPacks)));
+                    params.add(new BasicNameValuePair("version", VVDMod.MINECRAFT_VERSION));
+                    params.add(new BasicNameValuePair("packs", VVDMod.GSON.toJson(selectedPacks)));
                     httpPost.setEntity(new UrlEncodedFormEntity(params));
 
                     HttpResponse response = client.execute(httpPost);
@@ -156,7 +156,7 @@ public class VTDScreen extends Screen {
                     int responseStatus = response.getStatusLine().getStatusCode();
 
                     if (responseStatus != 200) {
-                        VTDMod.log(Level.WARN, "The download link request responded with an unexpected status code: {}", responseStatus);
+                        VVDMod.log(Level.WARN, "The download link request responded with an unexpected status code: {}", responseStatus);
                         return;
                     }
 
@@ -168,14 +168,14 @@ public class VTDScreen extends Screen {
                     }
                     this.downloadProgress = 0.35F;
 
-                    String downloadLink = VTDMod.GSON.fromJson(responseBody.toString(), JsonObject.class).get("link").getAsString();
+                    String downloadLink = VVDMod.GSON.fromJson(responseBody.toString(), JsonObject.class).get("link").getAsString();
                     String defaultFileName = downloadLink.split("/")[downloadLink.split("/").length - 1];
                     String fileName = !this.packNameField.getText().equals("") ? this.packNameField.getText() + ".zip" : defaultFileName;
 
                     // Download the resource pack
-                    URL url = new URL(VTDMod.BASE_URL + downloadLink);
+                    URL url = new URL(VVDMod.BASE_URL + downloadLink);
                     URLConnection connection = url.openConnection();
-                    connection.addRequestProperty("User-Agent", "VTDownloader v" + VTDMod.VERSION);
+                    connection.addRequestProperty("User-Agent", "vvdownloader v" + VVDMod.VERSION);
                     connection.setConnectTimeout(500);
                     connection.setConnectTimeout(4000);
 
@@ -187,7 +187,7 @@ public class VTDScreen extends Screen {
 
                 button.setSuccess(true);
             } catch (IOException e) {
-                VTDMod.logError("Encountered an exception while trying to download the resource pack.", e);
+                VVDMod.logError("Encountered an exception while trying to download the resource pack.", e);
                 button.setSuccess(false);
             }
         });
@@ -208,26 +208,26 @@ public class VTDScreen extends Screen {
 
         // Reload button
         this.addDrawableChild(new ArrowButtonWidget(10, 30, 20, 20, ArrowButtonWidget.ArrowType.CLOCKWISE, button -> {
-            VTDMod.reloadRPCategories();
-            this.client.setScreen(new VTDScreen(this.previousScreen, this.subtitle, this.selectedPacks));
+            VVDMod.reloadRPCategories();
+            this.client.setScreen(new VVDScreen(this.previousScreen, this.subtitle, this.selectedPacks));
         }));
         // Done button
-        this.addDrawableChild(new ButtonWidget(this.width - 90, this.height - 30, 80, 20, new TranslatableText("vtd.done"), button -> this.onClose()));
+        this.addDrawableChild(new ButtonWidget(this.width - 90, this.height - 30, 80, 20, new TranslatableText("vvd.done"), button -> this.onClose()));
 
-        this.downloadButton = this.addDrawableChild(new DownloadButtonWidget(this.width - 200, this.height - 30, 100, 20, new TranslatableText("vtd.download"), new TranslatableText("vtd.download.success"), new TranslatableText("vtd.download.failure"), button -> this.download((DownloadButtonWidget) button)));
+        this.downloadButton = this.addDrawableChild(new DownloadButtonWidget(this.width - 200, this.height - 30, 100, 20, new TranslatableText("vvd.download"), new TranslatableText("vvd.download.success"), new TranslatableText("vvd.download.failure"), button -> this.download((DownloadButtonWidget) button)));
 
         if (this.packNameField != null) {
-            this.packNameField = new PackNameTextFieldWidget(this.textRenderer, 10, this.height - 30, 160, 20, new TranslatableText("vtd.resourcePack.nameField"), this.client.getResourcePackDir(), this::updateDownloadButton, TOOLTIP_SUPPLIER, this.packNameField.getText());
+            this.packNameField = new PackNameTextFieldWidget(this.textRenderer, 10, this.height - 30, 160, 20, new TranslatableText("vvd.resourcePack.nameField"), this.client.getResourcePackDir(), this::updateDownloadButton, TOOLTIP_SUPPLIER, this.packNameField.getText());
         } else {
-            this.packNameField = new PackNameTextFieldWidget(this.textRenderer, 10, this.height - 30, 160, 20, new TranslatableText("vtd.resourcePack.nameField"), this.client.getResourcePackDir(), this::updateDownloadButton, TOOLTIP_SUPPLIER);
+            this.packNameField = new PackNameTextFieldWidget(this.textRenderer, 10, this.height - 30, 160, 20, new TranslatableText("vvd.resourcePack.nameField"), this.client.getResourcePackDir(), this::updateDownloadButton, TOOLTIP_SUPPLIER);
         }
         this.packNameField.setMaxLength(64);
         this.addSelectableChild(this.packNameField);
 
-        boolean exceptionFound = VTDMod.rpCategories.size() == 0;
+        boolean exceptionFound = VVDMod.rpCategories.size() == 0;
 
         if (!exceptionFound) {
-            JsonObject category = VTDMod.rpCategories.get(selectedTabIndex).getAsJsonObject();
+            JsonObject category = VVDMod.rpCategories.get(selectedTabIndex).getAsJsonObject();
 
             this.listWidget = this.addSelectableChild(new PackListWidget(category.get("packs").getAsJsonArray(), category.get("category").getAsString()));
         } else {
@@ -328,23 +328,23 @@ public class VTDScreen extends Screen {
 
     private void updateTabButtons() {
         this.tabLeftButton.active = this.tabIndex > 0;
-        this.tabRightButton.active = this.tabIndex < VTDMod.rpCategories.size() - 1;
+        this.tabRightButton.active = this.tabIndex < VVDMod.rpCategories.size() - 1;
 
         this.updateDownloadButton();
 
         this.tabButtons.clear();
 
         // Remove old buttons from this.children
-        for (JsonElement category : VTDMod.rpCategories) {
+        for (JsonElement category : VVDMod.rpCategories) {
             String categoryName = category.getAsJsonObject().get("category").getAsString();
             this.children().removeIf(element -> element instanceof ButtonWidget && ((ButtonWidget) element).getMessage().asString().equals(categoryName));
         }
 
         for (int i = 0; i < getTabNum(this.width); ++i) {
             int index = i + this.tabIndex;
-            if (index >= VTDMod.rpCategories.size()) break;
+            if (index >= VVDMod.rpCategories.size()) break;
 
-            JsonObject category = VTDMod.rpCategories.get(index).getAsJsonObject();
+            JsonObject category = VVDMod.rpCategories.get(index).getAsJsonObject();
             String categoryName = category.get("category").getAsString();
             ButtonWidget buttonWidget = new ButtonWidget(i * 130 + 100, 30, 120, 20, new LiteralText(categoryName), button -> {
                 if (this.selectedTabIndex != index) {
@@ -352,9 +352,9 @@ public class VTDScreen extends Screen {
 
                     this.remove(this.listWidget);
                     // Doesn't work as expected :/
-//                    this.listWidget.replaceEntries(VTDMod.rpCategories.get(selectedTabIndex).getAsJsonObject().get("packs").getAsJsonArray());
+//                    this.listWidget.replaceEntries(VVDMod.rpCategories.get(selectedTabIndex).getAsJsonObject().get("packs").getAsJsonArray());
 
-                    JsonObject category2 = VTDMod.rpCategories.get(selectedTabIndex).getAsJsonObject();
+                    JsonObject category2 = VVDMod.rpCategories.get(selectedTabIndex).getAsJsonObject();
                     this.listWidget = this.addSelectableChild(new PackListWidget(category2.get("packs").getAsJsonArray(), category2.get("category").getAsString()));
                 }
             });
